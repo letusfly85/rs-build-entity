@@ -5,7 +5,6 @@ use self::models::*;
 
 #[macro_use]
 extern crate tera;
-use tera::Tera;
 use tera::Context;
 
 extern crate diesel;
@@ -47,7 +46,7 @@ fn main() {
         Ok(column_info_list) => {
             context.add("table_name", &table_name);
             for column_info in column_info_list {
-                println!("{:?}", column_info);
+                // println!("{:?}", column_info);
                 let column_name_camel = column_info.column_name.to_camel_case();
                 let column = Columns4Tera::new(
                     column_info.column_name,
@@ -60,9 +59,10 @@ fn main() {
             let file_name = "TemplateEntity.scala.tpl";
             match tera.render(&file_name, &context) {
                 Ok(content) => {
-                    let mut f = BufWriter::new(fs::File::create("rs.scala").unwrap());
+                    let file_name = format!("products/{0}Entity.scala", &table_name.to_class_case());
+                    let mut f = BufWriter::new(fs::File::create(file_name).unwrap());
                     f.write(content.as_bytes()).unwrap();
-                    println!("{:?}", content)
+                    // println!("{:?}", content)
                 },
                 Err(err) => println!("{:?}", err)
             }
