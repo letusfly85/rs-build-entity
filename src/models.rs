@@ -24,3 +24,15 @@ pub struct Columns {
     pub data_type: String,
 }
 
+#[derive(Serialize)]
+pub struct Columns4Tera {
+    columnName: String,
+    columnNameCamel: String,
+    dataType: String
+}
+
+impl Columns4Tera {
+    pub fn new(column_name:String, column_name_camel: String, data_type: String) -> Columns4Tera {
+        Columns4Tera{columnName: column_name, columnNameCamel: column_name_camel, dataType: data_type}
+    }
+}

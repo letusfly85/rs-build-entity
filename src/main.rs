@@ -13,6 +13,12 @@ use diesel::*;
 
 use std::env;
 
+use std::fs;
+use std::io::{BufWriter, Write};
+
+extern crate inflector;
+use inflector::Inflector;
+
 fn main() {
     let args: Vec<String> = env::args().collect();
     let table_name = &args[1];
@@ -36,19 +42,28 @@ fn main() {
 
     let tera = compile_templates!("templates/*");
     let mut context = Context::new();
-    let mut column_list: Vec<String> = vec![];
+    let mut column_list: Vec<Columns4Tera> = vec![];
     match results {
         Ok(column_info_list) => {
             context.add("table_name", &table_name);
             for column_info in column_info_list {
                 println!("{:?}", column_info);
-                context.add("column_info", &column_info);
-                column_list.push(column_info.column_name);
+                let column_name_camel = column_info.column_name.to_camel_case();
+                let column = Columns4Tera::new(
+                    column_info.column_name,
+                   column_name_camel,
+                    column_info.data_type);
+                column_list.push(column);
             }
             context.add("column_list", &column_list);
-            let file_name = "TemplateEntity.scala";
+            context.add("entityName", &table_name.to_class_case());
+            let file_name = "TemplateEntity.scala.tpl";
             match tera.render(&file_name, &context) {
-                Ok(content) => println!("{:?}", content),
+                Ok(content) => {
+                    let mut f = BufWriter::new(fs::File::create("rs.scala").unwrap());
+                    f.write(content.as_bytes()).unwrap();
+                    println!("{:?}", content)
+                },
                 Err(err) => println!("{:?}", err)
             }
         },
