@@ -46,12 +46,17 @@ fn main() {
         Ok(column_info_list) => {
             context.add("table_name", &table_name);
             for column_info in column_info_list {
-                // println!("{:?}", column_info);
                 let column_name_camel = column_info.column_name.to_camel_case();
+                let data_type = match &*column_info.data_type {
+                    "varchar" => "String",
+                    "int" => "Int",
+                    _ => "unknown"
+                };
+
                 let column = Columns4Tera::new(
                     column_info.column_name,
-                   column_name_camel,
-                    column_info.data_type);
+                    column_name_camel,
+                    data_type.to_string());
                 column_list.push(column);
             }
             context.add("column_list", &column_list);
