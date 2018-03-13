@@ -2,6 +2,10 @@
 extern crate diesel;
 extern crate dotenv;
 
+extern crate serde;
+#[macro_use]
+extern crate serde_derive;
+
 pub mod models;
 
 use diesel::mysql::MysqlConnection;

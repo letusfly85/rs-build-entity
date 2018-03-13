@@ -10,7 +10,7 @@ table! {
 
 use diesel::sql_types::{Text, BigInt};
 
-#[derive(Debug, QueryableByName)]
+#[derive(Debug, QueryableByName, Serialize)]
 pub struct Columns {
     #[sql_type="Text"]
     pub table_schema: String,
@@ -23,3 +23,4 @@ pub struct Columns {
     #[sql_type="Text"]
     pub data_type: String,
 }
+
