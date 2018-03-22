@@ -27,7 +27,8 @@ fn main() {
             table_name,
             column_name,
             ordinal_position,
-            data_type
+            data_type,
+            is_nullable
         from
             information_schema.columns as columns
         where
@@ -50,17 +51,27 @@ fn main() {
                 let data_type = match &*column_info.data_type {
                     "varchar" => "String",
                     "int" => "Int",
+                    "datetime" => "Date",
                     _ => "unknown"
                 };
 
                 let column = Columns4Tera::new(
                     column_info.column_name,
                     column_name_camel,
-                    data_type.to_string());
-                column_list.push(column);
+                    data_type.to_string(),
+                    column_info.is_nullable);
+                if &column.columnName == "created_at" || &column.columnName == "updated_at" {
+
+                } else {
+                    column_list.push(column);
+                }
             }
             context.add("column_list", &column_list);
-            context.add("entityName", &table_name.to_class_case());
+
+            let entity_name = format!("{0}Entity", &table_name.to_class_case());
+            context.add("EntityName", &entity_name);
+
+            context.add("camelCaseName", &table_name.to_camel_case());
             let file_name = "TemplateEntity.scala.tpl";
             match tera.render(&file_name, &context) {
                 Ok(content) => {

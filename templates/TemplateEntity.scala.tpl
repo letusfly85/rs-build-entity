@@ -4,18 +4,22 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
 import play.api.libs.json._
 
-final case class {{ entityName }}Entity (
-{%for column in column_list %}  {{column.columnNameCamel}}: {{column.dataType}},
-  {% endfor %}
-) extends Entity
+final case class {{ EntityName }} (
+{%for column in column_list -%}
+  {%if column.is_nullable == "YES" -%}
+    {{ column.columnNameCamel }}: Option[{{ column.dataType }}],
+  {%else -%}
+    {{ column.columnNameCamel }}: {{ column.dataType }},
+  {%endif -%}
+{% endfor -%}) extends Entity
 
-object {{ entityName }} {
-  implicit def {{ table_name }}Reads: Reads[{{ entityName }}Entity] = (
+object {{ EntityName }} {
+  implicit def {{ camelCaseName }}Reads: Reads[{{ EntityName }}] = (
   {%for column in column_list %}  (JsPath \ "{{column.columnName}}").read[{{column.dataType}}] and
-  {% endfor %} )({{ entityName }}Entity.apply _)
+  {% endfor %} )({{ EntityName }}Entity.apply _)
 
-  implicit def {{ table_name }}Writes: Writes[{{ entityName }}Entity] = (
+  implicit def {{ camelCaseName }}Writes: Writes[{{ EntityName }}] = (
   {%for column in column_list %}  (JsPath \ "{{column.columnName}}").write[{{column.dataType}}] and
-  {% endfor %} )(unlift({{ entityName }}Entity.unapply))
+  {% endfor %} )(unlift({{ EntityName }}.unapply))
 }
 
