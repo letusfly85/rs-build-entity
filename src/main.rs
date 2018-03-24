@@ -68,6 +68,9 @@ fn main() {
             }
             context.add("column_list", &column_list);
 
+            let model_name = format!("{0}s", &table_name.to_class_case());
+            context.add("ModelName", &model_name);
+
             let entity_name = format!("{0}Entity", &table_name.to_class_case());
             context.add("EntityName", &entity_name);
 

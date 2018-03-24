@@ -33,5 +33,20 @@ object {{ EntityName }} {
     {%endif -%}
   {% endfor -%}
   )(unlift({{ EntityName }}.unapply))
+
+  implicit def convertFromModel(model: {{ ModelName }}): {{ EntityName }} = {
+    {{ EntityName }} (
+      {%for column in column_list -%}
+        {%if column.is_nullable == "YES" -%}
+            None,
+        {%else -%}
+           {{column.columnName}}
+        {%endif -%}
+      {% endfor -%}
+    )
+  }
+
+  implicit def convertFromModels(models: List[{{ ModelName }}]): List[{{ EntityName }}] =
+    models.map(convertFromModel)
 }
 
