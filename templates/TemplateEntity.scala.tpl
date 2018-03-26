@@ -40,7 +40,7 @@ object {{ EntityName }} {
         {%if column.is_nullable == "YES" -%}
             None,
         {%else -%}
-           {{column.columnName}}
+           model.{{column.columnNameCamel}},
         {%endif -%}
       {% endfor -%}
     )
