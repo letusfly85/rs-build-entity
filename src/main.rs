@@ -20,7 +20,8 @@ use inflector::Inflector;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
-    let table_name = &args[1];
+    let table_schema = &args[1];
+    let table_name = &args[2];
     let query = format!(r#"
         select
             table_schema,
@@ -32,8 +33,9 @@ fn main() {
         from
             information_schema.columns as columns
         where
-            table_name = '{0}'
-    "#, table_name);
+            table_schema = '{1}'
+        and table_name = '{0}'
+    "#, table_name, table_schema);
     println!("{}", &query);
 
     let connection = establish_connection();
