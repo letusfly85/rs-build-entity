@@ -7,10 +7,16 @@ use self::models::*;
 extern crate tera;
 use tera::Context;
 
+extern crate dotenv;
+use dotenv::dotenv;
+
 extern crate diesel;
 use diesel::*;
 
 use std::env;
+
+extern crate regex;
+use regex::Regex;
 
 use std::fs;
 use std::io::{BufWriter, Write};
@@ -19,9 +25,14 @@ extern crate inflector;
 use inflector::Inflector;
 
 fn main() {
+    dotenv().ok();
+    let re = Regex::new(r"([\w]+)://([a-z:]+)@0.0.0.0:([0-9]{4})/([a-z_]+)").unwrap();
+    let database_url = env::var("DATABASE_URL").unwrap();
+    let caps = re.captures(&database_url).unwrap();
+    let database_name = caps.get(4).unwrap().as_str();
+    println!("database: {}", &database_name);
     let args: Vec<String> = env::args().collect();
-    let table_schema = &args[1];
-    let table_name = &args[2];
+    let table_name = &args[1];
     let query = format!(r#"
         select
             table_schema,
@@ -35,7 +46,7 @@ fn main() {
         where
             table_schema = '{1}'
         and table_name = '{0}'
-    "#, table_name, table_schema);
+    "#, table_name, database_name);
     println!("{}", &query);
 
     let connection = establish_connection();
