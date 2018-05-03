@@ -65,6 +65,7 @@ fn main() {
                     "varchar" => "String",
                     "int" => "Int",
                     "datetime" => "Date",
+                    "tinyint" => "Boolean",
                     _ => "unknown"
                 };
 
@@ -79,6 +80,7 @@ fn main() {
                     column_list.push(column);
                 }
             }
+            context.add("column_list_length", &column_list.len());
             context.add("column_list", &column_list);
 
             let model_name = format!("{0}s", &table_name.to_class_case());
