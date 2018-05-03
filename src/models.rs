@@ -8,7 +8,7 @@ table! {
     }
 }
 
-use diesel::sql_types::{Text, BigInt, Bool};
+use diesel::sql_types::{Text, BigInt};
 
 #[derive(Debug, QueryableByName, Serialize)]
 pub struct Columns {
@@ -28,14 +28,19 @@ pub struct Columns {
 
 #[derive(Serialize)]
 pub struct Columns4Tera {
-    pub columnName: String,
-    pub columnNameCamel: String,
-    dataType: String,
+    pub column_name: String,
+    pub column_name_camel: String,
+    data_type: String,
     is_nullable: String
 }
 
 impl Columns4Tera {
     pub fn new(column_name:String, column_name_camel: String, data_type: String, is_nullable: String) -> Columns4Tera {
-        Columns4Tera{columnName: column_name, columnNameCamel: column_name_camel, dataType: data_type, is_nullable: is_nullable}
+        Columns4Tera{
+            column_name,
+            column_name_camel,
+            data_type,
+            is_nullable
+        }
     }
 }

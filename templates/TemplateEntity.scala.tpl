@@ -37,11 +37,7 @@ object {{ EntityName }} {
   implicit def convertFromModel(model: {{ ModelName }}): {{ EntityName }} = {
     {{ EntityName }} (
       {%for column in column_list -%}
-        {%if column.is_nullable == "YES" -%}
-            None,
-        {%else -%}
-           model.{{column.columnNameCamel}},
-        {%endif -%}
+         model.{{column.columnNameCamel}},
       {% endfor -%}
     )
   }

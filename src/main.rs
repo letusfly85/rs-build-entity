@@ -73,7 +73,7 @@ fn main() {
                     column_name_camel,
                     data_type.to_string(),
                     column_info.is_nullable);
-                if &column.columnName == "created_at" || &column.columnName == "updated_at" {
+                if &column.column_name == "created_at" || &column.column_name == "updated_at" {
 
                 } else {
                     column_list.push(column);
