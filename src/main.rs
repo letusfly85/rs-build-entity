@@ -100,6 +100,8 @@ fn main() {
                 Err(err) => println!("{:?}", err)
             }
             let repository_name = format!("{0}Repository", &table_name.to_class_case());
+            let table_alias = generate_table_alias(table_name.to_string());
+            context.add("TableAlias", &table_alias);
             context.add("RepositoryName", &repository_name);
             let file_name = "TemplateRepository.scala.tpl";
             match tera.render(&file_name, &context) {
@@ -113,4 +115,12 @@ fn main() {
         },
         Err(err) => println!("{:?}", err)
     }
+}
+
+fn generate_table_alias(table_name: String) -> String {
+    let table_prefix_list: Vec<&str> = table_name.split("_").collect();
+    let prefix_list: Vec<&str> = table_prefix_list.iter().map(|&table_prefix| &table_prefix[0..1]).collect();
+    println!("{} -> {}", &table_name, prefix_list.join(""));
+
+    return prefix_list.join("").to_string();
 }

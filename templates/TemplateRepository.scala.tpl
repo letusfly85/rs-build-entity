@@ -7,6 +7,8 @@ import scala.util.{Failure, Success, Try}
 class {{ RepositoryName }} extends Repository[{{ EntityName }}] {
   import {{ EntityName }}._
 
+  val {{ TableAlias }} = {{ ModelName }}.syntax("{{ TableAlias }}")
+
   override def find(id: Int): Option[{{ EntityName }}] = {
     {{ ModelName }}.find(id) match {
       case Some(model) => Some(model)
@@ -27,7 +29,7 @@ class {{ RepositoryName }} extends Repository[{{ EntityName }}] {
              {% set suffix = "" -%}
              {%endif -%}
              {%if column.column_name_camel != "id" -%}
-             tableAlias.{{ column.column_name_camel }} -> entity.{{ column.column_name_camel }}{{ suffix }}
+             {{ TableAlias }}.{{ column.column_name_camel }} -> entity.{{ column.column_name_camel }}{{ suffix }}
              {%endif -%}
           {% endfor -%}
           )
