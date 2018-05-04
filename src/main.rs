@@ -93,10 +93,20 @@ fn main() {
             let file_name = "TemplateEntity.scala.tpl";
             match tera.render(&file_name, &context) {
                 Ok(content) => {
-                    let file_name = format!("products/{0}Entity.scala", &table_name.to_class_case());
+                    let file_name = format!("products/{0}.scala", &entity_name);
                     let mut f = BufWriter::new(fs::File::create(file_name).unwrap());
                     f.write(content.as_bytes()).unwrap();
-                    // println!("{:?}", content)
+                },
+                Err(err) => println!("{:?}", err)
+            }
+            let repository_name = format!("{0}Repository", &table_name.to_class_case());
+            context.add("RepositoryName", &repository_name);
+            let file_name = "TemplateRepository.scala.tpl";
+            match tera.render(&file_name, &context) {
+                Ok(content) => {
+                    let file_name = format!("products/{0}.scala", &repository_name);
+                    let mut f = BufWriter::new(fs::File::create(file_name).unwrap());
+                    f.write(content.as_bytes()).unwrap();
                 },
                 Err(err) => println!("{:?}", err)
             }
