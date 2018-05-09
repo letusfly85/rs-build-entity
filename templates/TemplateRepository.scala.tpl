@@ -44,7 +44,7 @@ class {{ RepositoryName }} extends Repository[{{ EntityName }}] {
   {% set i = 0 -%}
   {% set suffix = "," -%}
   override def update(entity: {{ EntityName }}): Either[Exception, {{ EntityName }}] = {
-    {{ ModelName }}.find(id) match {
+    {{ ModelName }}.find(entity.id) match {
       case Some(model) =>
         model.copy(
           {%for column in column_list -%}
@@ -53,7 +53,7 @@ class {{ RepositoryName }} extends Repository[{{ EntityName }}] {
               {% set suffix = "" -%}
             {%endif -%}
             {%if column.column_name_camel != "id" -%}
-          model.{{ column.column_name_camel }} = entity.{{ column.column_name_camel }}{{ suffix }}
+          {{ column.column_name_camel }} = entity.{{ column.column_name_camel }}{{ suffix }}
             {%endif -%}
           {% endfor -%}
         ).save()
