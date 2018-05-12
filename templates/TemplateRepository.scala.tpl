@@ -7,7 +7,7 @@ import scala.util.{Failure, Success, Try}
 class {{ RepositoryName }} extends Repository[{{ EntityName }}] {
   import {{ EntityName }}._
 
-  val {{ TableAlias }} = {{ ModelName }}.syntax("{{ TableAlias }}")
+  val {{ TableAlias }} = {{ ModelName }}.column
 
   override def find(id: Int): Option[{{ EntityName }}] = {
     {{ ModelName }}.find(id) match {
