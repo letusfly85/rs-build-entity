@@ -26,7 +26,7 @@ use inflector::Inflector;
 
 fn main() {
     dotenv().ok();
-    let re = Regex::new(r"([\w]+)://([a-z:]+)@0.0.0.0:([0-9]{4})/([a-z_]+)").unwrap();
+    let re = Regex::new(r"([\w]+)://([a-z:]+)@0.0.0.0:([0-9]{4})/([a-z0-9_]+)").unwrap();
     let database_url = env::var("DATABASE_URL").unwrap();
     let caps = re.captures(&database_url).unwrap();
     let database_name = caps.get(4).unwrap().as_str();

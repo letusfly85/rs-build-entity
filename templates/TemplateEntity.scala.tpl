@@ -21,11 +21,17 @@ final case class {{ EntityName }} (
 
 object {{ EntityName }} {
   implicit def {{ camelCaseName }}Reads: Reads[{{ EntityName }}] = (
+  {% set i = 0 -%}
+  {% set suffix = " and" -%}
   {%for column in column_list -%}
+    {% set i = i + 1 -%}
+    {%if i >= column_list_length -%}
+        {% set suffix = "" -%}
+    {%endif -%}
     {%if column.is_nullable == "YES" -%}
-        (JsPath \ "{{column.column_name}}").readNullable[{{column.data_type}}] and
+        (JsPath \ "{{column.column_name}}").readNullable[{{column.data_type}}] {{ suffix }}
     {%else -%}
-        (JsPath \ "{{column.column_name}}").read[{{column.data_type}}] and
+        (JsPath \ "{{column.column_name}}").read[{{column.data_type}}] {{ suffix }}
     {%endif -%}
   {% endfor -%}
   )({{ EntityName }}.apply _)
@@ -36,7 +42,7 @@ object {{ EntityName }} {
   {%for column in column_list -%}
     {% set i = i + 1 -%}
     {%if i >= column_list_length -%}
-    {% set suffix = "" -%}
+        {% set suffix = "" -%}
     {%endif -%}
     {%if column.is_nullable == "YES" -%}
         (JsPath \ "{{column.column_name}}").writeNullable[{{column.data_type}}] {{ suffix }}
