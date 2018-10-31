@@ -112,6 +112,17 @@ fn main() {
                 },
                 Err(err) => println!("{:?}", err)
             }
+            let akka_http_entity_name = format!("{0}EntityOnAkkaHttp", &table_name.to_class_case());
+            context.add("EntityOnAkkaHttp", &akka_http_entity_name);
+            let file_name = "EntityOnAkkaHttp.scala.tpl";
+            match tera.render(&file_name, &context) {
+                Ok(content) => {
+                    let file_name = format!("products/{0}.scala", &akka_http_entity_name);
+                    let mut f = BufWriter::new(fs::File::create(file_name).unwrap());
+                    f.write(content.as_bytes()).unwrap();
+                },
+                Err(err) => println!("{:?}", err)
+            }
         },
         Err(err) => println!("{:?}", err)
     }
